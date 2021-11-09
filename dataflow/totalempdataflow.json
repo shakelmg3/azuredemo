@@ -1,0 +1,42 @@
+{
+	"name": "totalempdataflow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "empdatasetcsv",
+						"type": "DatasetReference"
+					},
+					"name": "employees"
+				},
+				{
+					"dataset": {
+						"referenceName": "DEPDATADATASET",
+						"type": "DatasetReference"
+					},
+					"name": "departments"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "outputdatasetjoin",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Aggregateondepartment"
+				},
+				{
+					"name": "Joinondep"
+				}
+			],
+			"script": "source(output(\n\t\tempid as string,\n\t\tname as string,\n\t\tcountry as string,\n\t\tdepartment as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> employees\nsource(output(\n\t\tDEPID as string,\n\t\tDEPNAME as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> departments\nemployees aggregate(groupBy(department),\n\ttotalemployees = count(empid)) ~> Aggregateondepartment\nAggregateondepartment, departments join(department == DEPID,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> Joinondep\nJoinondep sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['totalempbydeplatest'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\tDEPNAME,\n\t\ttotalemployees\n\t),\n\tpartitionBy('hash', 1)) ~> sink1"
+		}
+	}
+}

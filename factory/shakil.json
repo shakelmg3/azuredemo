@@ -1,0 +1,9 @@
+{
+	"name": "shakil",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "2ac55503-e6c0-497f-8596-ad2630b6434a",
+		"tenantId": "414197b4-05fa-477b-92a7-58264534b82b"
+	}
+}

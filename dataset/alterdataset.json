@@ -1,0 +1,17 @@
+{
+	"name": "alterdataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlServerlinked",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "tbl_employees"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

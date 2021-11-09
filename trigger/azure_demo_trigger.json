@@ -1,0 +1,105 @@
+{
+	"name": "azure_demo_trigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "pipeline1",
+					"type": "PipelineReference"
+				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "copydatapipeline2",
+					"type": "PipelineReference"
+				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "pipeline3",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"filename": "sourcepath"
+				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "eachpipeline",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"outputfolders": [
+						1,
+						2,
+						3
+					]
+				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "metadatapipeline",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"output": [
+						1,
+						2,
+						3
+					]
+				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "webpipeline",
+					"type": "PipelineReference"
+				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "switchpipeline",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"foldername": "output1"
+				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "validatepipeline",
+					"type": "PipelineReference"
+				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "executefilterdataflowpipeline",
+					"type": "PipelineReference"
+				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "sumemppipeline",
+					"type": "PipelineReference"
+				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "totalemppipeline",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 30,
+				"startTime": "2021-11-07T07:05:00Z",
+				"endTime": "2021-11-08T07:05:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}

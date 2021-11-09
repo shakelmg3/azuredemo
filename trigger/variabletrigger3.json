@@ -1,0 +1,27 @@
+{
+	"name": "variabletrigger3",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "variablepipeline",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"executiondate": "@trigger().scheduledTime"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 15,
+				"startTime": "2021-11-02T06:33:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
