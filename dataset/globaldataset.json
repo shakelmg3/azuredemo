@@ -1,0 +1,37 @@
+{
+	"name": "globaldataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Azure_linkedservice1",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Root": {
+				"type": "string"
+			},
+			"File": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().File",
+					"type": "Expression"
+				},
+				"container": {
+					"value": "@dataset().Root",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
