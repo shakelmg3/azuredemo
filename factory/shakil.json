@@ -1,5 +1,13 @@
 {
 	"name": "shakil",
+	"properties": {
+		"globalParameters": {
+			"Rootpath": {
+				"type": "string",
+				"value": " azurecontainer / azure_folder"
+			}
+		}
+	},
 	"location": "eastus",
 	"identity": {
 		"type": "SystemAssigned",
