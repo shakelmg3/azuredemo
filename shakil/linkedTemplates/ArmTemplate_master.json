@@ -123,9 +123,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"sqllinkedservices_connectionString": {
-						"value": "[parameters('sqllinkedservices_connectionString')]"
 					}
 				}
 			},
@@ -146,6 +143,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"sqllinkedservices_connectionString": {
+						"value": "[parameters('sqllinkedservices_connectionString')]"
 					}
 				}
 			},
@@ -186,18 +186,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"event_trigger_properties_hourly_log_pipeline_parameters_sourcepath": {
-						"value": "[parameters('event_trigger_properties_hourly_log_pipeline_parameters_sourcepath')]"
-					},
-					"event_trigger_properties_hourly_log_pipeline_parameters_sourcefile": {
-						"value": "[parameters('event_trigger_properties_hourly_log_pipeline_parameters_sourcefile')]"
-					},
-					"event_trigger_properties_typeProperties_scope": {
-						"value": "[parameters('event_trigger_properties_typeProperties_scope')]"
-					},
-					"variabletrigger3_properties_variablepipeline_parameters_executiondate": {
-						"value": "[parameters('variabletrigger3_properties_variablepipeline_parameters_executiondate')]"
 					}
 				}
 			},
@@ -218,6 +206,18 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"event_trigger_properties_hourly_log_pipeline_parameters_sourcepath": {
+						"value": "[parameters('event_trigger_properties_hourly_log_pipeline_parameters_sourcepath')]"
+					},
+					"event_trigger_properties_hourly_log_pipeline_parameters_sourcefile": {
+						"value": "[parameters('event_trigger_properties_hourly_log_pipeline_parameters_sourcefile')]"
+					},
+					"event_trigger_properties_typeProperties_scope": {
+						"value": "[parameters('event_trigger_properties_typeProperties_scope')]"
+					},
+					"variabletrigger3_properties_variablepipeline_parameters_executiondate": {
+						"value": "[parameters('variabletrigger3_properties_variablepipeline_parameters_executiondate')]"
 					},
 					"azure_demo_trigger_properties_pipeline3_parameters_filename": {
 						"value": "[parameters('azure_demo_trigger_properties_pipeline3_parameters_filename')]"
