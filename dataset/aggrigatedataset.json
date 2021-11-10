@@ -10,7 +10,6 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "empdata.csv.data.csv.data.update.txt",
 				"folderPath": "azure_folder",
 				"container": "azurecontainer"
 			},
