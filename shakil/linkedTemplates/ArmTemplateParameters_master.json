@@ -1,0 +1,59 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "shakil"
+		},
+		"Azure_linkedservice1_connectionString": {
+			"value": ""
+		},
+		"SqlServer1_connectionString": {
+			"value": ""
+		},
+		"SqlServerlinked_connectionString": {
+			"value": ""
+		},
+		"sqllinkedservices_connectionString": {
+			"value": ""
+		},
+		"azure_demo_trigger_properties_pipeline3_parameters_filename": {
+			"value": "sourcepath"
+		},
+		"azure_demo_trigger_properties_eachpipeline_parameters_outputfolders": {
+			"value": [
+				1,
+				2,
+				3
+			]
+		},
+		"azure_demo_trigger_properties_metadatapipeline_parameters_output": {
+			"value": [
+				1,
+				2,
+				3
+			]
+		},
+		"azure_demo_trigger_properties_switchpipeline_parameters_foldername": {
+			"value": "output1"
+		},
+		"event_trigger_properties_hourly_log_pipeline_parameters_sourcepath": {
+			"value": "@triggerbody().filepath"
+		},
+		"event_trigger_properties_hourly_log_pipeline_parameters_sourcefile": {
+			"value": "@triggerbody().filename"
+		},
+		"event_trigger_properties_typeProperties_scope": {
+			"value": "/subscriptions/a17ca950-0421-4d5d-b784-83e00831cd2f/resourceGroups/azure_demo_shakil/providers/Microsoft.Storage/storageAccounts/azurestorageshakil"
+		},
+		"variabletrigger3_properties_variablepipeline_parameters_executiondate": {
+			"value": "@trigger().scheduledTime"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}

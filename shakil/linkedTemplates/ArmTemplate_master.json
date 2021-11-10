@@ -1,0 +1,214 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "shakil"
+		},
+		"Azure_linkedservice1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Azure_linkedservice1'"
+		},
+		"SqlServer1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SqlServer1'"
+		},
+		"SqlServerlinked_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SqlServerlinked'"
+		},
+		"sqllinkedservices_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'sqllinkedservices'"
+		},
+		"azure_demo_trigger_properties_pipeline3_parameters_filename": {
+			"type": "string",
+			"defaultValue": "sourcepath"
+		},
+		"azure_demo_trigger_properties_eachpipeline_parameters_outputfolders": {
+			"type": "array",
+			"defaultValue": [
+				1,
+				2,
+				3
+			]
+		},
+		"azure_demo_trigger_properties_metadatapipeline_parameters_output": {
+			"type": "array",
+			"defaultValue": [
+				1,
+				2,
+				3
+			]
+		},
+		"azure_demo_trigger_properties_switchpipeline_parameters_foldername": {
+			"type": "string",
+			"defaultValue": "output1"
+		},
+		"event_trigger_properties_hourly_log_pipeline_parameters_sourcepath": {
+			"type": "string",
+			"defaultValue": "@triggerbody().filepath"
+		},
+		"event_trigger_properties_hourly_log_pipeline_parameters_sourcefile": {
+			"type": "string",
+			"defaultValue": "@triggerbody().filename"
+		},
+		"event_trigger_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/a17ca950-0421-4d5d-b784-83e00831cd2f/resourceGroups/azure_demo_shakil/providers/Microsoft.Storage/storageAccounts/azurestorageshakil"
+		},
+		"variabletrigger3_properties_variablepipeline_parameters_executiondate": {
+			"type": "string",
+			"defaultValue": "@trigger().scheduledTime"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "shakil_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"Azure_linkedservice1_connectionString": {
+						"value": "[parameters('Azure_linkedservice1_connectionString')]"
+					},
+					"SqlServer1_connectionString": {
+						"value": "[parameters('SqlServer1_connectionString')]"
+					},
+					"SqlServerlinked_connectionString": {
+						"value": "[parameters('SqlServerlinked_connectionString')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "shakil_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"sqllinkedservices_connectionString": {
+						"value": "[parameters('sqllinkedservices_connectionString')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'shakil_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "shakil_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'shakil_ArmTemplate_1')]"
+			]
+		},
+		{
+			"name": "shakil_ArmTemplate_3",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_3.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'shakil_ArmTemplate_2')]"
+			]
+		},
+		{
+			"name": "shakil_ArmTemplate_4",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_4.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"event_trigger_properties_hourly_log_pipeline_parameters_sourcepath": {
+						"value": "[parameters('event_trigger_properties_hourly_log_pipeline_parameters_sourcepath')]"
+					},
+					"event_trigger_properties_hourly_log_pipeline_parameters_sourcefile": {
+						"value": "[parameters('event_trigger_properties_hourly_log_pipeline_parameters_sourcefile')]"
+					},
+					"event_trigger_properties_typeProperties_scope": {
+						"value": "[parameters('event_trigger_properties_typeProperties_scope')]"
+					},
+					"variabletrigger3_properties_variablepipeline_parameters_executiondate": {
+						"value": "[parameters('variabletrigger3_properties_variablepipeline_parameters_executiondate')]"
+					},
+					"azure_demo_trigger_properties_pipeline3_parameters_filename": {
+						"value": "[parameters('azure_demo_trigger_properties_pipeline3_parameters_filename')]"
+					},
+					"azure_demo_trigger_properties_eachpipeline_parameters_outputfolders": {
+						"value": "[parameters('azure_demo_trigger_properties_eachpipeline_parameters_outputfolders')]"
+					},
+					"azure_demo_trigger_properties_metadatapipeline_parameters_output": {
+						"value": "[parameters('azure_demo_trigger_properties_metadatapipeline_parameters_output')]"
+					},
+					"azure_demo_trigger_properties_switchpipeline_parameters_foldername": {
+						"value": "[parameters('azure_demo_trigger_properties_switchpipeline_parameters_foldername')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'shakil_ArmTemplate_3')]"
+			]
+		}
+	]
+}
