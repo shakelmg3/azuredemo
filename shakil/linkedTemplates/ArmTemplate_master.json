@@ -198,6 +198,26 @@
 					},
 					"variabletrigger3_properties_variablepipeline_parameters_executiondate": {
 						"value": "[parameters('variabletrigger3_properties_variablepipeline_parameters_executiondate')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'shakil_ArmTemplate_3')]"
+			]
+		},
+		{
+			"name": "shakil_ArmTemplate_5",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_5.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
 					},
 					"azure_demo_trigger_properties_pipeline3_parameters_filename": {
 						"value": "[parameters('azure_demo_trigger_properties_pipeline3_parameters_filename')]"
@@ -214,7 +234,7 @@
 				}
 			},
 			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'shakil_ArmTemplate_3')]"
+				"[resourceId('Microsoft.Resources/deployments', 'shakil_ArmTemplate_4')]"
 			]
 		}
 	]

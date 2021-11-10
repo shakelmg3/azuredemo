@@ -22,36 +22,192 @@
 		"variabletrigger3_properties_variablepipeline_parameters_executiondate": {
 			"type": "string",
 			"defaultValue": "@trigger().scheduledTime"
-		},
-		"azure_demo_trigger_properties_pipeline3_parameters_filename": {
-			"type": "string",
-			"defaultValue": "sourcepath"
-		},
-		"azure_demo_trigger_properties_eachpipeline_parameters_outputfolders": {
-			"type": "array",
-			"defaultValue": [
-				1,
-				2,
-				3
-			]
-		},
-		"azure_demo_trigger_properties_metadatapipeline_parameters_output": {
-			"type": "array",
-			"defaultValue": [
-				1,
-				2,
-				3
-			]
-		},
-		"azure_demo_trigger_properties_switchpipeline_parameters_foldername": {
-			"type": "string",
-			"defaultValue": "output1"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/newbranchpipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "newmergedataflow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"employeesdata": {},
+									"department": {},
+									"totalempbydepsink": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-11-08T10:28:00Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline3')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Execute Pipeline1",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "copydatapipeline2",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"filename": {
+						"type": "string"
+					}
+				},
+				"variables": {
+					"filetype": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-11-02T14:36:31Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline5')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "empanddepdataflow",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflow1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"EMPDATA": {},
+									"DEPDATA": {},
+									"outputdata": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2021-11-07T07:08:18Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline7')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "1.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "transferdataflow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/pivotpipeline')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -731,156 +887,6 @@
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/azure_demo_trigger')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "pipeline1",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					},
-					{
-						"pipelineReference": {
-							"referenceName": "copydatapipeline2",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					},
-					{
-						"pipelineReference": {
-							"referenceName": "pipeline3",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"filename": "[parameters('azure_demo_trigger_properties_pipeline3_parameters_filename')]"
-						}
-					},
-					{
-						"pipelineReference": {
-							"referenceName": "eachpipeline",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"outputfolders": "[parameters('azure_demo_trigger_properties_eachpipeline_parameters_outputfolders')]"
-						}
-					},
-					{
-						"pipelineReference": {
-							"referenceName": "metadatapipeline",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"output": "[parameters('azure_demo_trigger_properties_metadatapipeline_parameters_output')]"
-						}
-					},
-					{
-						"pipelineReference": {
-							"referenceName": "webpipeline",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					},
-					{
-						"pipelineReference": {
-							"referenceName": "switchpipeline",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"foldername": "[parameters('azure_demo_trigger_properties_switchpipeline_parameters_foldername')]"
-						}
-					},
-					{
-						"pipelineReference": {
-							"referenceName": "validatepipeline",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					},
-					{
-						"pipelineReference": {
-							"referenceName": "executefilterdataflowpipeline",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					},
-					{
-						"pipelineReference": {
-							"referenceName": "sumemppipeline",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					},
-					{
-						"pipelineReference": {
-							"referenceName": "totalemppipeline",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Minute",
-						"interval": 30,
-						"startTime": "2021-11-07T07:05:00Z",
-						"endTime": "2021-11-08T07:05:00Z",
-						"timeZone": "UTC"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/sumemppipeline')]",
-				"[concat(variables('factoryId'), '/pipelines/totalemppipeline')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/trigger2')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipeline": {
-					"pipelineReference": {
-						"referenceName": "hourly_log_pipeline",
-						"type": "PipelineReference"
-					},
-					"parameters": {}
-				},
-				"type": "TumblingWindowTrigger",
-				"typeProperties": {
-					"frequency": "Minute",
-					"interval": 30,
-					"startTime": "2021-11-01T09:35:00Z",
-					"endTime": "2021-11-03T09:35:00Z",
-					"delay": "00:00:00",
-					"maxConcurrency": 50,
-					"retryPolicy": {
-						"intervalInSeconds": 30
-					},
-					"dependsOn": [
-						{
-							"type": "TumblingWindowTriggerDependencyReference",
-							"referenceTrigger": {
-								"referenceName": "trigger1",
-								"type": "TriggerReference"
-							}
-						}
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/triggers/trigger1')]"
-			]
 		}
 	]
 }

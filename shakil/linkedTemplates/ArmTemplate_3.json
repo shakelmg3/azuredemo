@@ -13,6 +13,100 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/lookupdataflow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "lookupdataset",
+								"type": "DatasetReference"
+							},
+							"name": "employees"
+						},
+						{
+							"dataset": {
+								"referenceName": "DEPDATADATASET",
+								"type": "DatasetReference"
+							},
+							"name": "department"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "outputdatasetjoin",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "Lookup1"
+						}
+					],
+					"script": "source(output(\n\t\tempid as string,\n\t\tname as string,\n\t\tcountry as string,\n\t\tdepartment as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> employees\nsource(output(\n\t\tDEPID as string,\n\t\tDEPNAME as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> department\nemployees, department lookup(department == DEPID,\n\tmultiple: false,\n\tpickup: 'any',\n\tbroadcast: 'auto')~> Lookup1\nLookup1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['lookupresultemp'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> sink1"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/newmergedataflow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "aggrigatedataset",
+								"type": "DatasetReference"
+							},
+							"name": "employeesdata"
+						},
+						{
+							"dataset": {
+								"referenceName": "DEPDATADATASET",
+								"type": "DatasetReference"
+							},
+							"name": "department"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "outputdatasetjoin",
+								"type": "DatasetReference"
+							},
+							"name": "totalempbydepsink"
+						},
+						{
+							"dataset": {
+								"referenceName": "outputdatasetjoin",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "Aggregate1"
+						},
+						{
+							"name": "Join1"
+						}
+					],
+					"script": "source(output(\n\t\tempid as string,\n\t\tname as string,\n\t\tcountry as string,\n\t\tdepartment as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> employeesdata\nsource(output(\n\t\tDEPID as string,\n\t\tDEPNAME as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> department\nemployeesdata aggregate(groupBy(department),\n\ttotalempdata = count(empid)) ~> Aggregate1\nemployeesdata, department join(department == DEPID,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> Join1\nAggregate1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['totalempbydep.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\tdepid = department,\n\t\ttotalempdata\n\t),\n\tpartitionBy('hash', 1)) ~> totalempbydepsink\nJoin1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['empdep.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\tempid,\n\t\tname,\n\t\tcountry,\n\t\tDEPID,\n\t\tDEPNAME\n\t),\n\tpartitionBy('hash', 1)) ~> sink1"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/parameterdataflow')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -295,6 +389,41 @@
 						}
 					],
 					"script": "source(output(\n\t\tempid as string,\n\t\tname as string,\n\t\tcountry as string,\n\t\tdepartment as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> employees\nsource(output(\n\t\tDEPID as string,\n\t\tDEPNAME as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> departments\nemployees aggregate(groupBy(department),\n\ttotalemployees = count(empid)) ~> Aggregateondepartment\nAggregateondepartment, departments join(department == DEPID,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> Joinondep\nJoinondep sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['totalempbydeplatest'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\tDEPNAME,\n\t\ttotalemployees\n\t),\n\tpartitionBy('hash', 1)) ~> sink1"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/transferdataflow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "windowdataset",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "alterdataset",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "AlterRow1"
+						}
+					],
+					"script": "source(output(\n\t\tid as string,\n\t\tname as string,\n\t\tgender as string,\n\t\tcountry as string,\n\t\tsalary as string,\n\t\tdepartment as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source1\nsource1 alterRow(deleteIf(department=='Payroll')) ~> AlterRow1\nAlterRow1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tmapColumn(\n\t\tempid = id,\n\t\tempname = name,\n\t\tgender,\n\t\tcountry,\n\t\tsalary,\n\t\tdepartment\n\t)) ~> sink1"
 				}
 			},
 			"dependsOn": []
@@ -743,142 +872,9 @@
 				"annotations": [],
 				"lastPublishTime": "2021-11-08T07:27:45Z"
 			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/newbranchpipeline')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Data flow1",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "1.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "newmergedataflow",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"employeesdata": {},
-									"department": {},
-									"totalempbydepsink": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": [],
-				"lastPublishTime": "2021-11-08T10:28:00Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pipeline3')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Execute Pipeline1",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "copydatapipeline2",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"filename": {
-						"type": "string"
-					}
-				},
-				"variables": {
-					"filetype": {
-						"type": "String"
-					}
-				},
-				"annotations": [],
-				"lastPublishTime": "2021-11-02T14:36:31Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pipeline5')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "empanddepdataflow",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "1.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "dataflow1",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"EMPDATA": {},
-									"DEPDATA": {},
-									"outputdata": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": [],
-				"lastPublishTime": "2021-11-07T07:08:18Z"
-			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/lookupdataflow')]"
+			]
 		}
 	]
 }
