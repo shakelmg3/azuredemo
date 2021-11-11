@@ -1,1 +1,6 @@
-{}
+{
+	"Rootpath": {
+		"type": "string",
+		"value": " azurecontainer / azure_folder"
+	}
+}
