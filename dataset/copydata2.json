@@ -1,0 +1,22 @@
+{
+	"name": "copydata2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Azure_linkedservice1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "2",
+				"container": "azurecontainer"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
